@@ -13,6 +13,31 @@ import scala.io.Source
 
 import java.io.File
 import java.io._
+import java.io.{PrintWriter, File}
+import java.lang.Exception
+import java.util.logging._
+import org.apache.spark.{rdd, SparkConf, SparkContext}
+import org.apache.spark.api.java.JavaPairRDD
+import org.apache.spark.api.java.JavaRDD
+import org.apache.spark.api.java.JavaSparkContext
+import org.apache.spark.api.java.function.{FlatMapFunction, Function2, PairFunction}
+import org.apache.spark.rdd.{PairRDDFunctions, RDD}
+import scala.Tuple2
+import java.util.{Scanner, Calendar, StringTokenizer}
+
+import scala.collection.mutable.MutableList
+import scala.io.Source
+import scala.reflect.ClassTag
+
+//remove if not needed
+import scala.collection.JavaConversions._
+
+import scala.util.control.Breaks._
+import org.apache.spark.lineage.LineageContext
+import org.apache.spark.lineage.LineageContext._
+
+import org.apache.spark.SparkContext._
+import scala.sys.process._
 
 
 
@@ -90,11 +115,124 @@ class Test extends userTest[(String, String)] with Serializable {
     }
     outputFile.delete
     */
-    inputRDD.collect().foreach(println)
-    val finalRdd = DeltaWorkflowManager.generateNewWorkFlow(inputRDD)
-    val out = finalRdd.collect()
+
+    //The following is for test with goNext
+    val resultRDD = inputRDD
+      .groupByKey()
+      .map(pair => {
+          //val valueList: MutableList[FileCountPair] = MutableList()
+          val valueList: MutableList[String] = MutableList()
+          val resultList: MutableList[String] = MutableList()
+          //val itr = pair._2.toIterator
+          val itr = pair._2.toIterator
+          while (itr.hasNext) {
+            //val valuePair = new FileCountPair(itr.next())
+            val valuePair = new String(itr.next().asInstanceOf[(String, Long)]._1)
+            valueList += valuePair
+          }
+          val valueListArr = valueList.toArray
+          val newList = valueListArr.sortWith((a, b) => {
+            //if (a.getCount > b.getCount) true
+            //else false
+            val aColon = a.indexOf("-")
+            val bColon = b.indexOf("-")
+            val aCount = a.substring(aColon + 1).toInt
+            val bCount = b.substring(bColon + 1).toInt
+            if (aCount > bCount) true
+            else false
+          })
+          for (a <- newList) {
+            val colonIndex = a.indexOf("-")
+            val cnt = a.substring(colonIndex + 1)
+            //val cnt = a.getCount
+            val file = a.substring(0, colonIndex)
+            //val rst = cnt + "|" + a.getFile
+            val rst = cnt + "|" + file
+            resultList += rst
+          }
+          (pair._1, resultList.toList)
+        })
+        //this map creates an exception
+        .map(pair => {
+          var value = new String("")
+          for (s <- pair._2) {
+            value += s + ","
+          }
+          value = value.substring(0, value.length - 1)
+          if (value.contains("3294446891:4816295")) {
+            value += "*"
+          }
+          (pair._1, value)
+        })
+
+    val out = resultRDD.collect()
+
+    //The following is test for version without goNext
+//      val resultRDD = inputRDD
+//        .map(pair => {
+//          val fileIndex = pair._1.lastIndexOf("|")
+//          val wordString = pair._1.substring(0, fileIndex)
+//          val docId = pair._1.substring(fileIndex + 1)
+//
+//          //val fileCountPair = new FileCountPair(docId, count)
+//          val fileCountPair = new String(docId + "-" + pair._2)
+//          (wordString, fileCountPair)
+//        })
+//        .groupByKey()
+//        .map(pair => {
+//          //val valueList: MutableList[FileCountPair] = MutableList()
+//          val valueList: MutableList[String] = MutableList()
+//          val resultList: MutableList[String] = MutableList()
+//          //val itr = pair._2.toIterator
+//          val itr = pair._2.toIterator
+//          while (itr.hasNext) {
+//            //val valuePair = new FileCountPair(itr.next())
+//            val valuePair = new String(itr.next().asInstanceOf[(String, Long)]._1)
+//            valueList += valuePair
+//          }
+//          val valueListArr = valueList.toArray
+//          val newList = valueListArr.sortWith((a, b) => {
+//            //if (a.getCount > b.getCount) true
+//            //else false
+//            val aColon = a.indexOf("-")
+//            val bColon = b.indexOf("-")
+//            val aCount = a.substring(aColon + 1).toInt
+//            val bCount = b.substring(bColon + 1).toInt
+//            if (aCount > bCount) true
+//            else false
+//          })
+//          for (a <- newList) {
+//            val colonIndex = a.indexOf("-")
+//            val cnt = a.substring(colonIndex + 1)
+//            //val cnt = a.getCount
+//            val file = a.substring(0, colonIndex)
+//            //val rst = cnt + "|" + a.getFile
+//            val rst = cnt + "|" + file
+//            resultList += rst
+//          }
+//          (pair._1, resultList.toList)
+//        })
+//        //this map creates an exception
+//        .map(pair => {
+//          var value = new String("")
+//          for (s <- pair._2) {
+//            value += s + ","
+//          }
+//          value = value.substring(0, value.length - 1)
+//          if (value.contains("3294446891:4816295")) {
+//            value += "*"
+//          }
+//          (pair._1, value)
+//        })
+//
+//    val out = resultRDD.collect()
+
+
+//    inputRDD.collect().foreach(println)
+//    val finalRdd = DeltaWorkflowManager.generateNewWorkFlow(inputRDD)
+//    val out = finalRdd.collect()
     for (o <- out) {
-      println(o)
+//      println(o)
       if (o.asInstanceOf[(String, String)]._2.substring(o.asInstanceOf[(String, String)]._2.length - 1).equals("*")) returnValue = true
     }
     return returnValue

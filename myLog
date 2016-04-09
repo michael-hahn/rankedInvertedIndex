@@ -1,6 +1,81 @@
-Mar 30, 2016 10:49:59 AM RankedInvertedIndex$ main
-INFO: Record Lineage time starts at 2016-03-30 10:49:59.462
-Mar 30, 2016 10:50:51 AM RankedInvertedIndex$ main
-INFO: Lineage takes 51619818 microseconds
-Mar 30, 2016 10:50:51 AM RankedInvertedIndex$ main
-INFO: Lineage ends at 2016-03-30 10:50:51.083
+Apr 05, 2016 2:04:56 PM RankedInvertedIndex$ main
+INFO: Record Lineage time starts at 2016-04-05 14:04:56.006
+Apr 05, 2016 2:05:46 PM RankedInvertedIndex$ main
+INFO: Lineage takes 50405518 microseconds
+Apr 05, 2016 2:05:46 PM RankedInvertedIndex$ main
+INFO: Lineage ends at 2016-04-05 14:05:46.413
+Apr 05, 2016 2:06:06 PM RankedInvertedIndex$ main
+INFO: Record DeltaDebugging (unadjusted) time starts at 2016-04-05 14:06:06.841
+Apr 05, 2016 2:06:06 PM DD_NonEx dd_helper
+INFO: Running DD_NonEx SCALA
+Apr 05, 2016 2:06:28 PM DD_NonEx dd_helper
+INFO: Finish the 1th run of Non-exhaustive DD, taking 22153530 microseconds
+Apr 05, 2016 2:06:28 PM DD_NonEx dd_helper
+INFO: This data size is 271
+Apr 05, 2016 2:06:28 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:06:51 PM DD_NonEx dd_helper
+INFO: Finish the 2th run of Non-exhaustive DD, taking 22054287 microseconds
+Apr 05, 2016 2:06:51 PM DD_NonEx dd_helper
+INFO: This data size is 145
+Apr 05, 2016 2:06:51 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:07:07 PM DD_NonEx dd_helper
+INFO: Finish the 3th run of Non-exhaustive DD, taking 16652451 microseconds
+Apr 05, 2016 2:07:07 PM DD_NonEx dd_helper
+INFO: This data size is 78
+Apr 05, 2016 2:07:07 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:07:29 PM DD_NonEx dd_helper
+INFO: Finish the 4th run of Non-exhaustive DD, taking 22281861 microseconds
+Apr 05, 2016 2:07:29 PM DD_NonEx dd_helper
+INFO: This data size is 42
+Apr 05, 2016 2:07:29 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:07:50 PM DD_NonEx dd_helper
+INFO: Finish the 5th run of Non-exhaustive DD, taking 20975820 microseconds
+Apr 05, 2016 2:07:50 PM DD_NonEx dd_helper
+INFO: This data size is 24
+Apr 05, 2016 2:07:50 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:08:06 PM DD_NonEx dd_helper
+INFO: Finish the 6th run of Non-exhaustive DD, taking 15048526 microseconds
+Apr 05, 2016 2:08:06 PM DD_NonEx dd_helper
+INFO: This data size is 12
+Apr 05, 2016 2:08:06 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:08:25 PM DD_NonEx dd_helper
+INFO: Finish the 7th run of Non-exhaustive DD, taking 19038052 microseconds
+Apr 05, 2016 2:08:25 PM DD_NonEx dd_helper
+INFO: This data size is 10
+Apr 05, 2016 2:08:25 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:08:44 PM DD_NonEx dd_helper
+INFO: Finish the 8th run of Non-exhaustive DD, taking 19270774 microseconds
+Apr 05, 2016 2:08:44 PM DD_NonEx dd_helper
+INFO: This data size is 6
+Apr 05, 2016 2:08:44 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:08:57 PM DD_NonEx dd_helper
+INFO: Finish the 9th run of Non-exhaustive DD, taking 13522795 microseconds
+Apr 05, 2016 2:08:57 PM DD_NonEx dd_helper
+INFO: This data size is 3
+Apr 05, 2016 2:08:57 PM DD_NonEx dd_helper
+INFO: The next partition is 2
+Apr 05, 2016 2:09:07 PM DD_NonEx dd_helper
+INFO: The #10 run is done
+Apr 05, 2016 2:09:07 PM DD_NonEx dd_helper
+INFO: RDD Only Holds One Line - End of This Branch of Search
+Apr 05, 2016 2:09:07 PM DD_NonEx dd_helper
+WARNING: Delta Debugged Error inducing inputs: 
+Apr 05, 2016 2:09:09 PM DD_NonEx$$anonfun$dd_helper$3 apply
+WARNING: ((Dan|Connolly|(American,3294446891:4816295-2),-1064176273)
+
+Apr 05, 2016 2:09:09 PM DD_NonEx dd_helper
+INFO: This run takes 9575432 microseconds
+Apr 05, 2016 2:09:57 PM RankedInvertedIndex$ main
+INFO: DeltaDebugging (unadjusted) ends at 2016-04-05 14:09:57.318
+Apr 05, 2016 2:09:57 PM RankedInvertedIndex$ main
+INFO: DeltaDebugging (unadjusted) takes 230469339 microseconds
+Apr 05, 2016 2:09:57 PM RankedInvertedIndex$ main
+INFO: Record total time: Delta-Debugging + Linegae + goNext:301303025 microseconds

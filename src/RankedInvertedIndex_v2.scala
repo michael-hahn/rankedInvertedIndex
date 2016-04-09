@@ -1,8 +1,6 @@
 /**
- * Created by Michael on 1/26/16.
+ * Created by Michael on 4/5/16.
  */
-
-
 import java.io.{PrintWriter, File}
 import java.lang.Exception
 import java.util.logging._
@@ -29,34 +27,7 @@ import org.apache.spark.lineage.LineageContext._
 import org.apache.spark.SparkContext._
 import scala.sys.process._
 
-object RankedInvertedIndex {
-//      def main(args:Array[String]): Unit = {
-//        val sparkConf = new SparkConf().setMaster("local[8]")
-//        sparkConf.setAppName("rankedInvertedIndex_LineageDD-" )
-//          .set("spark.executor.memory", "2g")
-//
-//        val ctx = new SparkContext(sparkConf)
-//
-//        val pw = new PrintWriter(new File("/Users/Michael/Desktop/RII"))
-//
-//
-//        val lines = ctx.textFile("/Users/Michael/Documents/UCLA Senior/F15/Research-Fall2015/output_SequenceCount/part-00000", 1)
-//        val constr = new sparkOperations
-//        val output = constr.sparkWorks(lines).collect
-//        val itr = output.iterator
-//        while (itr.hasNext) {
-//          val tupVal = itr.next()
-//          pw.append(tupVal._1 + ": --- \n")
-//          val itr2 = tupVal._2.toIterator
-//          while (itr2.hasNext){
-//            val strVal = itr2.next()
-//            pw.append(strVal + " \n")
-//          }
-//
-//        }
-//        pw.close()
-//        ctx.stop()
-//      }
+object RankedInvertedIndex_v2 {
   private val exhaustive = 0
 
 
@@ -183,29 +154,29 @@ object RankedInvertedIndex {
       Thread.sleep(1000)
 
       //print out the result of the spark program - for debugging purpose
-//      for (o <- out) {
-//        println(o._1._1 + ": " + o._1._2 + " - " + o._2)
-//      }
+      //      for (o <- out) {
+      //        println(o._1._1 + ": " + o._1._2 + " - " + o._2)
+      //      }
 
 
       //get the index of results that crashed the program
       var list = List[Long]()
       for (o <- out) {
         if (o._1._2.substring(o._1._2.length - 1).equals("*")) {
-//          println(o._1._1 + ": " + o._1._2 + " - " + o._2)
+          //          println(o._1._1 + ": " + o._1._2 + " - " + o._2)
           list = o._2 :: list
         }
       }
 
       //print out the resulting list for debugging purpose
-//      println("************************")
-//      for (i <- list){
-//        println(i)
-//      }
-//      println("************************")
+      //      println("************************")
+      //      for (i <- list){
+      //        println(i)
+      //      }
+      //      println("************************")
 
 
-//      val pw = new PrintWriter(new File("/Users/Michael/IdeaProjects/RankedInvertedIndex/lineageResult"))
+      //      val pw = new PrintWriter(new File("/Users/Michael/IdeaProjects/RankedInvertedIndex/lineageResult"))
 
 
       var linRdd = separate.getLineage()
@@ -224,35 +195,35 @@ object RankedInvertedIndex {
       logger.log(Level.INFO, "Lineage takes " + (lineageEndTime - LineageStartTime)/1000 + " microseconds")
       logger.log(Level.INFO, "Lineage ends at " + lineageEndTimestamp)
 
-//      linRdd.show.collect.foreach(println)
+      //      linRdd.show.collect.foreach(println)
 
-//      linRdd.show.collect().foreach(s => {
-//        pw.append(s.toString)
-//        pw.append('\n')
-//      })
+      //      linRdd.show.collect().foreach(s => {
+      //        pw.append(s.toString)
+      //        pw.append('\n')
+      //      })
 
-//      pw.close()
+      //      pw.close()
 
-      linRdd = linRdd.goNext()
 
       val showMeRdd = linRdd.show().toRDD
       val mappedRDD = showMeRdd.map(s => {
-        val str = s.toString
-        val index = str.lastIndexOf(",")
-        val lineageID = str.substring(index + 1, str.length - 1)
-        val content = str.substring(2, index - 1)
-        val index2 = content.indexOf(",")
-        ((content.substring(0, index2), content.substring(index2 + 1)), lineageID.toLong)
+        val line = s.toString()
+        val countIndex = line.lastIndexOf("\t")
+        val valueString = line.substring(0, countIndex)
+        val count = line.substring(countIndex + 1)
+        (valueString, count)
       })
+      mappedRDD.cache()
+
 
 //      println("MappedRDD has " + mappedRDD.count() + " records")
 
 
       //val lineageResult = ctx.textFile("/Users/Michael/IdeaProjects/InvertedIndex/lineageResult", 1)
-//      val lineageResult = ctx.textFile("/Users/Michael/Documents/UCLA Senior/F15/Research-Fall2015/output_SequenceCount/rii_file", 1)
-//
-//      val num = lineageResult.count()
-//      logger.log(Level.INFO, "Lineage caught " + num + " records to run delta-debugging")
+      //      val lineageResult = ctx.textFile("/Users/Michael/Documents/UCLA Senior/F15/Research-Fall2015/output_SequenceCount/rii_file", 1)
+      //
+      //      val num = lineageResult.count()
+      //      logger.log(Level.INFO, "Lineage caught " + num + " records to run delta-debugging")
 
 
       //Remove output before delta-debugging
@@ -271,29 +242,14 @@ object RankedInvertedIndex {
         */
       //lineageResult.cache()
 
-//      if (exhaustive == 1) {
-//        val delta_debug: DD[String] = new DD[String]
-//        delta_debug.ddgen(lineageResult, new Test,
-//          new Split, lm, fh)
-//      } else {
-        val delta_debug = new DD_NonEx[(String, String), Long]
-        val returnedRDD = delta_debug.ddgen(mappedRDD, new Test, new Split, lm, fh)
-//      }
+      //this version is for test without goNext
+      val delta_debug = new DD_NonEx_v2[(String, String)]
+      val returnedRDD = delta_debug.ddgen(mappedRDD, new Test, new Split_v2, lm, fh)
+
 
       val ss = returnedRDD.collect
-      // linRdd.collect.foreach(println)
-      linRdd = separate.getLineage()
-      linRdd.collect
-      linRdd = linRdd.goBack().goBack().filter(l => {
-        if(l.asInstanceOf[((Int, Int), (Int, Int))]._1._2 == ss(0)._2.toInt){
-//          println("*** => " + l)
-          true
-        }else false
-      })
 
-      linRdd = linRdd.goBackAll()
-      linRdd.collect()
-      linRdd.show()
+      ss.foreach(println)
 
       val DeltaDebuggingEndTime = System.nanoTime()
       val DeltaDebuggingEndTimestamp = new java.sql.Timestamp(Calendar.getInstance.getTime.getTime)
@@ -309,4 +265,5 @@ object RankedInvertedIndex {
 
     }
   }
+
 }
